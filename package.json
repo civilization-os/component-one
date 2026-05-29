@@ -1,0 +1,17 @@
+{
+  "name": "component-one",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Isolated AI component packages for civilization-os projects.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
