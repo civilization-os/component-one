@@ -28,6 +28,7 @@ component-one/
 | Package | Status | Description |
 | --- | --- | --- |
 | `@civilization-os/example-pack` | Private example | A minimal package template that is not published. |
+| `@civilization-os/pptx-presets` | Initial | Reusable PPTX template presets for presentation generators. |
 
 ## Development
 

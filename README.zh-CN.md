@@ -22,6 +22,7 @@ component-one/
 | 包名 | 状态 | 说明 |
 | --- | --- | --- |
 | `@civilization-os/example-pack` | 私有示例 | 一个不会发布的最小包模板。 |
+| `@civilization-os/pptx-presets` | 初始版本 | 给 PPT 生成器使用的可复用模板预设。 |
 
 ## 开发
 
