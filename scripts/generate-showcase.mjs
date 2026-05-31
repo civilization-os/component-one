@@ -1,0 +1,337 @@
+import { rm, mkdir } from "node:fs/promises";
+import { createPresentation, validateDeck } from "../packages/ppt/dist/index.js";
+
+const deck = validateDeck({
+  title: "Component One — 智能演示引擎",
+  language: "zh-CN",
+  presetId: "product-showcase",
+  slides: [
+    // ===== Slide 1: 封面 =====
+    {
+      id: "s1",
+      title: "Component One",
+      notes: {
+        summary: "欢迎来到 Component One 的演示。这是一个由 AI 驱动的智能演示引擎。",
+        cues: ["开场直接点明主题。"],
+      },
+      steps: [
+        {
+          id: "s1-step-1",
+          blocks: [
+            { id: "s1-heading", kind: "heading", text: "Component One" },
+          ],
+        },
+        {
+          id: "s1-step-2",
+          blocks: [
+            { id: "s1-subtitle", kind: "text", text: "AI 原生演示引擎 · 从 Markdown 到交互动画的智能 Pipeline" },
+          ],
+          actions: [{ kind: "appear", targetId: "s1-subtitle", timing: { delayMs: 180, durationMs: 520, easing: "ease-out" } }],
+        },
+        {
+          id: "s1-step-3",
+          blocks: [
+            { id: "s1-presets", kind: "bullets", items: ["3 套预设模板", "中英双语支持", "演讲者+观众双视图"] },
+          ],
+          actions: [{ kind: "appear", targetId: "s1-presets", timing: { delayMs: 120, durationMs: 400, easing: "ease-out" } }],
+        },
+      ],
+    },
+
+    // ===== Slide 2: 核心架构 =====
+    {
+      id: "s2",
+      title: "核心架构",
+      notes: {
+        summary: "一能力一门面，内部层次清晰。",
+        stepGuidance: [
+          { step: 2, cue: "看左边的输入层。", targetBlockId: "s2-callout" },
+          { step: 3, highlightTargetId: "s2-deck-model", highlightTiming: { delayMs: 80, durationMs: 300, easing: "ease-out" } },
+          { step: 4, spotlight: { x: 0.72, y: 0.42, radius: 0.15 }, appearTargetId: "s2-adapters" },
+        ],
+      },
+      steps: [
+        {
+          id: "s2-step-1",
+          blocks: [
+            { id: "s2-heading", kind: "heading", text: "核心架构" },
+          ],
+        },
+        {
+          id: "s2-step-2",
+          blocks: [
+            { id: "s2-callout", kind: "callout", text: "输入层：Markdown / 纯文本 / LLM 生成的 Deck JSON" },
+          ],
+          actions: [{ kind: "appear", targetId: "s2-callout", timing: { delayMs: 140, durationMs: 460, easing: "ease-out" } }],
+        },
+        {
+          id: "s2-step-3",
+          blocks: [
+            { id: "s2-deck-model", kind: "text", text: "Deck 模型：结构化的中间表示，含 Slides → Steps → Blocks → Actions 四层" },
+          ],
+          actions: [{ kind: "highlight", targetId: "s2-deck-model", timing: { delayMs: 80, durationMs: 300, easing: "ease-out" } }],
+        },
+        {
+          id: "s2-step-4",
+          blocks: [
+            { id: "s2-adapters", kind: "text", text: "输出适配器：HTML Bundle（互动演示）+ PPTX（可编辑文件）" },
+          ],
+          actions: [{ kind: "appear", targetId: "s2-adapters", timing: { delayMs: 140, durationMs: 460, easing: "ease-out" } }],
+        },
+      ],
+    },
+
+    // ===== Slide 3: 四种舞台动作 =====
+    {
+      id: "s3",
+      title: "舞台动作",
+      notes: {
+        summary: "四种语义化的舞台动作，每一种都有独立的入场/出场节奏。",
+        stepGuidance: [
+          { step: 2, highlightTargetId: "s3-highlight", highlightTiming: { delayMs: 80, durationMs: 300, easing: "ease-out" } },
+          { step: 3, appearTargetId: "s3-appear" },
+          { step: 4, spotlight: { x: 0.28, y: 0.45, radius: 0.12 }, appearTargetId: "s3-spotlight" },
+          { step: 5, laserPoints: [{ x: 0.4, y: 0.6 }, { x: 0.6, y: 0.35 }, { x: 0.8, y: 0.5 }], appearTargetId: "s3-laser" },
+        ],
+      },
+      steps: [
+        {
+          id: "s3-step-1",
+          blocks: [
+            { id: "s3-heading", kind: "heading", text: "四种舞台动作" },
+          ],
+        },
+        {
+          id: "s3-step-2",
+          blocks: [
+            { id: "s3-highlight", kind: "text", text: "🎯 Highlight — 聚焦某个内容块，其余区域自动变暗" },
+          ],
+          actions: [{ kind: "highlight", targetId: "s3-highlight", timing: { delayMs: 80, durationMs: 300, easing: "ease-out" } }],
+        },
+        {
+          id: "s3-step-3",
+          blocks: [
+            { id: "s3-appear", kind: "text", text: "✨ Appear — 新内容渐显入场，适合逐步揭示信息" },
+          ],
+          actions: [{ kind: "appear", targetId: "s3-appear", timing: { delayMs: 140, durationMs: 460, easing: "ease-out" } }],
+        },
+        {
+          id: "s3-step-4",
+          blocks: [
+            { id: "s3-spotlight", kind: "text", text: "🔦 Spotlight — 圆形聚光灯效果，照到哪里讲哪里" },
+          ],
+          actions: [
+            { kind: "spotlight", x: 0.28, y: 0.45, radius: 0.12, timing: { delayMs: 100, durationMs: 420, easing: "ease-out" } },
+            { kind: "appear", targetId: "s3-spotlight", timing: { delayMs: 100, durationMs: 420, easing: "ease-out" } },
+          ],
+        },
+        {
+          id: "s3-step-5",
+          blocks: [
+            { id: "s3-laser", kind: "text", text: "✏️ Laser — 激光笔路径动画，引导观众视线" },
+          ],
+          actions: [
+            { kind: "laser", points: [{ x: 0.4, y: 0.6 }, { x: 0.6, y: 0.35 }, { x: 0.8, y: 0.5 }], timing: { delayMs: 240, durationMs: 680, easing: "cubic-bezier(0.22,1,0.36,1)" } },
+            { kind: "appear", targetId: "s3-laser", timing: { delayMs: 180, durationMs: 520, easing: "ease-out" } },
+          ],
+        },
+      ],
+    },
+
+    // ===== Slide 4: 预设对比 =====
+    {
+      id: "s4",
+      title: "预设模板对比",
+      notes: {
+        summary: "三套预设适配不同场景，从高管汇报到产品推介。",
+        stepGuidance: [
+          { step: 2, highlightTargetId: "s4-table", highlightTiming: { delayMs: 80, durationMs: 300, easing: "ease-out" } },
+        ],
+      },
+      steps: [
+        {
+          id: "s4-step-1",
+          blocks: [
+            { id: "s4-heading", kind: "heading", text: "预设模板对比" },
+          ],
+        },
+        {
+          id: "s4-step-2",
+          blocks: [
+            {
+              id: "s4-table", kind: "table",
+              headers: ["特性", "Executive Report", "Technical Brief", "Product Showcase"],
+              rows: [
+                ["场景", "战略汇报", "架构评审", "产品演示"],
+                ["主色", "蓝色 #2563EB", "紫色 #7C3AED", "红色 #DC2626"],
+                ["动效节奏", "沉稳收敛", "紧凑精准", "舒缓渐进"],
+                ["推荐内容", "指标/表格", "代码/架构图", "图片/功能"],
+              ],
+            },
+          ],
+          actions: [{ kind: "highlight", targetId: "s4-table", timing: { delayMs: 80, durationMs: 300, easing: "ease-out" } }],
+        },
+      ],
+    },
+
+    // ===== Slide 5: 双视图同步 =====
+    {
+      id: "s5",
+      title: "双视图演示系统",
+      notes: {
+        summary: "观众视图 + 演讲者视图，实时同步。",
+        stepGuidance: [
+          { step: 2, appearTargetId: "s5-features" },
+          { step: 3, spotlight: { x: 0.5, y: 0.5, radius: 0.2 }, highlightTargetId: "s5-keyboard" },
+        ],
+      },
+      steps: [
+        {
+          id: "s5-step-1",
+          blocks: [
+            { id: "s5-heading", kind: "heading", text: "双视图演示系统" },
+          ],
+        },
+        {
+          id: "s5-step-2",
+          blocks: [
+            { id: "s5-features", kind: "callout", text: "观众看大屏，演讲者看备注、节奏控制、下一步预览。两窗口自动同步。" },
+          ],
+          actions: [{ kind: "appear", targetId: "s5-features", timing: { delayMs: 180, durationMs: 520, easing: "ease-out" } }],
+        },
+        {
+          id: "s5-step-3",
+          blocks: [
+            { id: "s5-keyboard", kind: "bullets", items: [
+              "→/Space 翻页 · ← 后退",
+              "S 打开演讲者视图",
+              "B 黑屏 · T 计时器",
+              "F 全屏 · ? 快捷键帮助",
+              "← 滑动翻页（触屏）",
+            ]},
+          ],
+          actions: [
+            { kind: "spotlight", x: 0.5, y: 0.5, radius: 0.2, timing: { delayMs: 100, durationMs: 420, easing: "ease-out" } },
+            { kind: "highlight", targetId: "s5-keyboard", timing: { delayMs: 80, durationMs: 300, easing: "ease-out" } },
+          ],
+        },
+      ],
+    },
+
+    // ===== Slide 6: 技术指标 =====
+    {
+      id: "s6",
+      title: "技术指标",
+      notes: {
+        summary: "纯 TypeScript，零 any 类型，零循环依赖。",
+        stepGuidance: [
+          { step: 2, appearTargetId: "s6-metrics" },
+        ],
+      },
+      steps: [
+        {
+          id: "s6-step-1",
+          blocks: [
+            { id: "s6-heading", kind: "heading", text: "技术指标" },
+          ],
+        },
+        {
+          id: "s6-step-2",
+          blocks: [
+            { id: "s6-metrics", kind: "metrics", items: [
+              { label: "TypeScript", value: "100%" },
+              { label: "测试通过", value: "40/40" },
+              { label: "Any 类型", value: "0" },
+              { label: "循环依赖", value: "0" },
+              { label: "运行时依赖", value: "仅 Zod" },
+            ]},
+          ],
+          actions: [{ kind: "appear", targetId: "s6-metrics", timing: { delayMs: 180, durationMs: 520, easing: "ease-out" } }],
+        },
+      ],
+    },
+
+    // ===== Slide 7: 双栏对比 =====
+    {
+      id: "s7",
+      title: "MCP 集成工作流",
+      notes: {
+        summary: "LLM + MCP + PPT 引擎的完整闭环。",
+        stepGuidance: [
+          { step: 2, highlightTargetId: "s7-compare", highlightTiming: { delayMs: 80, durationMs: 300, easing: "ease-out" } },
+        ],
+      },
+      steps: [
+        {
+          id: "s7-step-1",
+          blocks: [
+            { id: "s7-heading", kind: "heading", text: "MCP 集成工作流" },
+          ],
+        },
+        {
+          id: "s7-step-2",
+          blocks: [
+            {
+              id: "s7-compare", kind: "comparison",
+              leftTitle: "传统方式",
+              rightTitle: "MCP + Component One",
+              items: [
+                { label: "幻灯片制作", left: "手动拖拽排版", right: "一句话生成" },
+                { label: "模板适配", left: "手动调整样式", right: "预设自动应用" },
+                { label: "动作特效", left: "复杂的动画设置", right: "声明式语义动作" },
+                { label: "双视图同步", left: "第三方工具拼接", right: "内置 BroadcastChannel" },
+                { label: "迭代修改", left: "重新拖拽", right: "改 Markdown 即可" },
+              ],
+            },
+          ],
+          actions: [{ kind: "highlight", targetId: "s7-compare", timing: { delayMs: 80, durationMs: 300, easing: "ease-out" } }],
+        },
+      ],
+    },
+
+    // ===== Slide 8: Timeline =====
+    {
+      id: "s8",
+      title: "项目路线图",
+      notes: {
+        summary: "从 MVP 到企业级演示平台的演进路线。",
+        stepGuidance: [
+          { step: 2, appearTargetId: "s8-timeline" },
+        ],
+      },
+      steps: [
+        {
+          id: "s8-step-1",
+          blocks: [
+            { id: "s8-heading", kind: "heading", text: "项目路线图" },
+          ],
+        },
+        {
+          id: "s8-step-2",
+          blocks: [
+            { id: "s8-timeline", kind: "timeline", items: [
+              { label: "MVP", detail: "Markdown → Deck → HTML / PPTX 完整管道" },
+              { label: "V2", detail: "更多预设模板 + 自定义主题编辑器" },
+              { label: "V3", detail: "实时协作 + 云端存储 + OAuth 集成" },
+              { label: "V4", detail: "AI 自动排版 + 智能内容推荐 + 多语言翻译" },
+            ]},
+          ],
+          actions: [{ kind: "appear", targetId: "s8-timeline", timing: { delayMs: 180, durationMs: 520, easing: "ease-out" } }],
+        },
+      ],
+    },
+  ],
+});
+
+const outputDir = "artifacts/component-one-showcase";
+await rm(outputDir, { recursive: true, force: true }).catch(() => {});
+await mkdir(outputDir, { recursive: true });
+
+const result = await createPresentation()
+  .preset("product-showcase")
+  .target("html-bundle")
+  .input(deck)
+  .output({ mode: "file", path: outputDir })
+  .build();
+
+console.log("✅ 成品路径:", result.outputPath);

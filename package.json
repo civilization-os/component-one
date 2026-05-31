@@ -9,9 +9,11 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "typecheck": "npm run typecheck --workspaces"
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
+    "@types/node": "^22.15.31",
     "typescript": "^5.5.0"
   }
 }

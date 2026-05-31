@@ -1,60 +1,4 @@
-export type PptxPresetId = "executive-report" | "technical-brief" | "product-showcase";
-
-export type PptxPlaceholderKind = "text" | "image" | "chart" | "table" | "shape";
-
-export type PptxTextStyle = {
-  fontFace: string;
-  fontSize: number;
-  color: string;
-  bold?: boolean;
-  italic?: boolean;
-};
-
-export type PptxPlaceholder = {
-  id: string;
-  kind: PptxPlaceholderKind;
-  role: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  style?: PptxTextStyle;
-};
-
-export type PptxLayoutPreset = {
-  id: string;
-  name: string;
-  purpose: string;
-  placeholders: PptxPlaceholder[];
-};
-
-export type PptxTemplatePreset = {
-  id: PptxPresetId;
-  name: string;
-  description: string;
-  aspectRatio: "16:9";
-  size: {
-    width: number;
-    height: number;
-    unit: "in";
-  };
-  theme: {
-    fonts: {
-      heading: string;
-      body: string;
-    };
-    colors: {
-      background: string;
-      surface: string;
-      title: string;
-      body: string;
-      muted: string;
-      accent: string;
-      secondary: string;
-    };
-  };
-  layouts: PptxLayoutPreset[];
-};
+import type { PptEngine, PptLayoutPreset, PptMotionProfile, PptPlaceholder, PptPresetId, PptTarget, PptTemplatePreset } from "./types.js";
 
 const wideSize = {
   width: 13.333,
@@ -62,13 +6,23 @@ const wideSize = {
   unit: "in" as const
 };
 
-export const pptxTemplatePresets: PptxTemplatePreset[] = [
+const supportedTargets: PptTarget[] = ["editable-pptx", "html-bundle"];
+
+const preferredEngines: Record<PptTarget, PptEngine> = {
+  "editable-pptx": "pptx",
+  "html-bundle": "html"
+};
+
+export const pptTemplatePresets: PptTemplatePreset[] = [
   {
     id: "executive-report",
     name: "Executive Report",
     description: "A restrained report preset for strategy reviews, board updates, and operating summaries.",
     aspectRatio: "16:9",
     size: wideSize,
+    capabilities: ["title", "section", "two-column", "metrics", "table"],
+    supportedTargets,
+    preferredEngines,
     theme: {
       fonts: {
         heading: "Aptos Display",
@@ -84,6 +38,22 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
         secondary: "0F766E"
       }
     },
+    motionProfile: createMotionProfile({
+      highlight: { enter: { delayMs: 90, durationMs: 300, easing: "ease-out" }, exit: { delayMs: 20, durationMs: 220, easing: "ease-in" } },
+      appear: { enter: { delayMs: 180, durationMs: 520, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 10, durationMs: 210, easing: "ease-in" } },
+      spotlight: { enter: { delayMs: 80, durationMs: 360, easing: "ease-out" }, exit: { delayMs: 0, durationMs: 220, easing: "ease-in" } },
+      laser: { enter: { delayMs: 230, durationMs: 560, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 0, durationMs: 220, easing: "ease-in" } },
+      byBlockKind: {
+        comparison: {
+          highlight: { enter: { delayMs: 110, durationMs: 340, easing: "ease-out" }, exit: { delayMs: 30, durationMs: 240, easing: "ease-in" } },
+          appear: { enter: { delayMs: 200, durationMs: 580, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 20, durationMs: 220, easing: "ease-in" } }
+        },
+        timeline: {
+          spotlight: { enter: { delayMs: 70, durationMs: 320, easing: "ease-out" }, exit: { delayMs: 0, durationMs: 200, easing: "ease-in" } },
+          laser: { enter: { delayMs: 210, durationMs: 520, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 0, durationMs: 210, easing: "ease-in" } }
+        }
+      }
+    }),
     layouts: [
       createTitleLayout("report-title"),
       createSectionLayout("section-divider"),
@@ -98,6 +68,9 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
     description: "A dense technical preset for architecture, system design, and implementation reviews.",
     aspectRatio: "16:9",
     size: wideSize,
+    capabilities: ["title", "two-column", "diagram", "code", "timeline"],
+    supportedTargets,
+    preferredEngines,
     theme: {
       fonts: {
         heading: "Aptos Display",
@@ -113,6 +86,22 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
         secondary: "0891B2"
       }
     },
+    motionProfile: createMotionProfile({
+      highlight: { enter: { delayMs: 70, durationMs: 260, easing: "ease-in-out" }, exit: { delayMs: 10, durationMs: 190, easing: "ease-in" } },
+      appear: { enter: { delayMs: 140, durationMs: 460, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 0, durationMs: 180, easing: "ease-in" } },
+      spotlight: { enter: { delayMs: 60, durationMs: 320, easing: "ease-out" }, exit: { delayMs: 0, durationMs: 180, easing: "ease-in" } },
+      laser: { enter: { delayMs: 190, durationMs: 520, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 0, durationMs: 190, easing: "ease-in" } },
+      byBlockKind: {
+        timeline: {
+          spotlight: { enter: { delayMs: 40, durationMs: 280, easing: "ease-out" }, exit: { delayMs: 0, durationMs: 160, easing: "ease-in" } },
+          laser: { enter: { delayMs: 150, durationMs: 440, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 0, durationMs: 170, easing: "ease-in" } }
+        },
+        comparison: {
+          highlight: { enter: { delayMs: 90, durationMs: 300, easing: "ease-in-out" }, exit: { delayMs: 20, durationMs: 210, easing: "ease-in" } },
+          appear: { enter: { delayMs: 170, durationMs: 500, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 10, durationMs: 190, easing: "ease-in" } }
+        }
+      }
+    }),
     layouts: [
       createTitleLayout("brief-title"),
       createTwoColumnLayout("problem-solution"),
@@ -127,6 +116,9 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
     description: "A visual preset for product narratives, feature walkthroughs, and demo-heavy decks.",
     aspectRatio: "16:9",
     size: wideSize,
+    capabilities: ["title", "image-focus", "feature-grid", "two-column", "metrics"],
+    supportedTargets,
+    preferredEngines,
     theme: {
       fonts: {
         heading: "Aptos Display",
@@ -142,6 +134,22 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
         secondary: "16A34A"
       }
     },
+    motionProfile: createMotionProfile({
+      highlight: { enter: { delayMs: 110, durationMs: 360, easing: "ease-out" }, exit: { delayMs: 30, durationMs: 260, easing: "ease-in" } },
+      appear: { enter: { delayMs: 210, durationMs: 620, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 20, durationMs: 240, easing: "ease-in" } },
+      spotlight: { enter: { delayMs: 90, durationMs: 420, easing: "ease-out" }, exit: { delayMs: 10, durationMs: 240, easing: "ease-in" } },
+      laser: { enter: { delayMs: 260, durationMs: 700, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 10, durationMs: 250, easing: "ease-in" } },
+      byBlockKind: {
+        comparison: {
+          highlight: { enter: { delayMs: 130, durationMs: 390, easing: "ease-out" }, exit: { delayMs: 30, durationMs: 270, easing: "ease-in" } },
+          appear: { enter: { delayMs: 240, durationMs: 660, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }, exit: { delayMs: 20, durationMs: 250, easing: "ease-in" } }
+        },
+        timeline: {
+          spotlight: { enter: { delayMs: 100, durationMs: 450, easing: "ease-out" }, exit: { delayMs: 10, durationMs: 250, easing: "ease-in" } },
+          laser: { enter: { delayMs: 280, durationMs: 760, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }, exit: { delayMs: 10, durationMs: 260, easing: "ease-in" } }
+        }
+      }
+    }),
     layouts: [
       createTitleLayout("showcase-title"),
       createImageFocusLayout("image-focus"),
@@ -152,25 +160,29 @@ export const pptxTemplatePresets: PptxTemplatePreset[] = [
   }
 ];
 
-export function listPptxPresets(): PptxTemplatePreset[] {
-  return [...pptxTemplatePresets];
+function createMotionProfile(profile: PptMotionProfile): PptMotionProfile {
+  return profile;
 }
 
-export function getPptxPreset(id: PptxPresetId): PptxTemplatePreset | undefined {
-  return pptxTemplatePresets.find((preset) => preset.id === id);
+export function listPptPresets(): PptTemplatePreset[] {
+  return [...pptTemplatePresets];
 }
 
-export function requirePptxPreset(id: PptxPresetId): PptxTemplatePreset {
-  const preset = getPptxPreset(id);
+export function getPptPreset(id: PptPresetId): PptTemplatePreset | undefined {
+  return pptTemplatePresets.find((preset) => preset.id === id);
+}
+
+export function requirePptPreset(id: PptPresetId): PptTemplatePreset {
+  const preset = getPptPreset(id);
 
   if (!preset) {
-    throw new Error(`Unknown PPTX preset: ${id}`);
+    throw new Error(`Unknown PPT preset: ${id}`);
   }
 
   return preset;
 }
 
-function createTitleLayout(id: string): PptxLayoutPreset {
+function createTitleLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Title",
@@ -183,7 +195,7 @@ function createTitleLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createSectionLayout(id: string): PptxLayoutPreset {
+function createSectionLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Section Divider",
@@ -196,7 +208,7 @@ function createSectionLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createTwoColumnLayout(id: string): PptxLayoutPreset {
+function createTwoColumnLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Two Column",
@@ -211,7 +223,7 @@ function createTwoColumnLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createMetricGridLayout(id: string): PptxLayoutPreset {
+function createMetricGridLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Metric Grid",
@@ -228,7 +240,7 @@ function createMetricGridLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createTableLayout(id: string): PptxLayoutPreset {
+function createTableLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Data Table",
@@ -241,7 +253,7 @@ function createTableLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createDiagramLayout(id: string): PptxLayoutPreset {
+function createDiagramLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Diagram",
@@ -254,7 +266,7 @@ function createDiagramLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createCodeLayout(id: string): PptxLayoutPreset {
+function createCodeLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Code Or Schema",
@@ -267,7 +279,7 @@ function createCodeLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createTimelineLayout(id: string): PptxLayoutPreset {
+function createTimelineLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Timeline",
@@ -284,7 +296,7 @@ function createTimelineLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createImageFocusLayout(id: string): PptxLayoutPreset {
+function createImageFocusLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Image Focus",
@@ -297,7 +309,7 @@ function createImageFocusLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function createFeatureGridLayout(id: string): PptxLayoutPreset {
+function createFeatureGridLayout(id: string): PptLayoutPreset {
   return {
     id,
     name: "Feature Grid",
@@ -312,7 +324,7 @@ function createFeatureGridLayout(id: string): PptxLayoutPreset {
   };
 }
 
-function titlePlaceholder(id: string, x: number, y: number, w: number, h: number, fontSize: number): PptxPlaceholder {
+function titlePlaceholder(id: string, x: number, y: number, w: number, h: number, fontSize: number): PptPlaceholder {
   return {
     id,
     kind: "text",
@@ -330,7 +342,7 @@ function titlePlaceholder(id: string, x: number, y: number, w: number, h: number
   };
 }
 
-function bodyPlaceholder(id: string, x: number, y: number, w: number, h: number, fontSize: number): PptxPlaceholder {
+function bodyPlaceholder(id: string, x: number, y: number, w: number, h: number, fontSize: number): PptPlaceholder {
   return {
     id,
     kind: "text",
@@ -347,7 +359,7 @@ function bodyPlaceholder(id: string, x: number, y: number, w: number, h: number,
   };
 }
 
-function imagePlaceholder(id: string, x: number, y: number, w: number, h: number): PptxPlaceholder {
+function imagePlaceholder(id: string, x: number, y: number, w: number, h: number): PptPlaceholder {
   return {
     id,
     kind: "image",
@@ -359,7 +371,7 @@ function imagePlaceholder(id: string, x: number, y: number, w: number, h: number
   };
 }
 
-function tablePlaceholder(id: string, x: number, y: number, w: number, h: number): PptxPlaceholder {
+function tablePlaceholder(id: string, x: number, y: number, w: number, h: number): PptPlaceholder {
   return {
     id,
     kind: "table",
@@ -371,7 +383,7 @@ function tablePlaceholder(id: string, x: number, y: number, w: number, h: number
   };
 }
 
-function shapePlaceholder(id: string, x: number, y: number, w: number, h: number): PptxPlaceholder {
+function shapePlaceholder(id: string, x: number, y: number, w: number, h: number): PptPlaceholder {
   return {
     id,
     kind: "shape",

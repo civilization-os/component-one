@@ -10,12 +10,29 @@
 
 This repository is intentionally not a workflow engine. Components do not depend on each other by default, and this repo does not prescribe how downstream projects combine them.
 
+## Project Characteristic
+
+`component-one` prefers one public facade per capability category.
+
+If a repository consumer needs "PPT", they should find one obvious PPT component instead of choosing between multiple overlapping packages. Different generation strategies, runtimes, or output formats can exist behind that facade, but the public entry point should stay simple.
+
+This is a deliberate repository rule:
+
+- expose one obvious package for one capability category
+- hide format-specific or implementation-specific complexity behind the facade
+- optimize for discoverability, not internal taxonomy
+- avoid making downstream teams decide between several near-duplicate packages
+
 ## Structure
 
 ```txt
 component-one/
   packages/
     example-pack/
+      src/
+      package.json
+      README.md
+    ppt/
       src/
       package.json
       README.md
@@ -28,7 +45,7 @@ component-one/
 | Package | Status | Description |
 | --- | --- | --- |
 | `@civilization-os/example-pack` | Private example | A minimal package template that is not published. |
-| `@civilization-os/pptx-presets` | Initial | Reusable PPTX template presets for presentation generators. |
+| `@civilization-os/ppt` | MVP | Unified PPT facade package with `text/markdown -> deck -> html bundle / editable .pptx` support. |
 
 ## Development
 
@@ -50,9 +67,16 @@ Type-check all packages:
 npm run typecheck
 ```
 
+Run tests:
+
+```bash
+npm test
+```
+
 ## Package Principles
 
 - Keep every package independently understandable, buildable, and publishable.
+- Prefer one public facade per capability category instead of multiple overlapping packages.
 - Prefer explicit input and output types.
 - Avoid cross-package dependencies unless a shared utility is truly stable.
 - Document purpose, input, output, dependencies, and usage in each package README.

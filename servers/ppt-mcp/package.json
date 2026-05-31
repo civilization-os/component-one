@@ -1,0 +1,15 @@
+{
+  "name": "ppt-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MCP server wrapping @civilization-os/ppt",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@civilization-os/ppt": "file:../../packages/ppt",
+    "component-one": "file:../.."
+  }
+}

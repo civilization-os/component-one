@@ -1,0 +1,842 @@
+{
+  "title": "Presentation Runtime Design",
+  "language": "en-US",
+  "sourceKind": "markdown",
+  "presetId": "technical-brief",
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "Presentation Runtime Design",
+      "notes": {
+        "summary": "Opening slide — set the stage for the runtime architecture discussion.",
+        "cues": [
+          "Frame this as the contrast between static decks and live presentation runtimes."
+        ],
+        "timing": [
+          "Pause briefly on the title before advancing."
+        ],
+        "emphasis": [
+          "Presentation runtime"
+        ],
+        "raw": "Summary: Opening slide — set the stage for the runtime architecture discussion.\nCue: Frame this as the contrast between static decks and live presentation runtimes.\nTiming: Pause briefly on the title before advancing.\nEmphasis: Presentation runtime"
+      },
+      "steps": [
+        {
+          "id": "slide-1-step-1",
+          "blocks": [
+            {
+              "id": "block-1-1",
+              "kind": "heading",
+              "text": "Presentation Runtime Design"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-1-step-2",
+          "blocks": [
+            {
+              "id": "block-1-2",
+              "kind": "text",
+              "text": "A lightweight, action-oriented presentation runtime with dual-view sync."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-2",
+      "title": "Core Architecture",
+      "notes": {
+        "summary": "Walk through the three-layer model. Highlight the deck immutability insight.",
+        "cues": [
+          "Emphasize that the deck never changes during a talk."
+        ],
+        "stepGuidance": [
+          {
+            "step": 2,
+            "cue": "Pause on the deck immutability point.",
+            "targetBlockId": "core-arch"
+          },
+          {
+            "step": 3,
+            "highlightTargetId": "core-arch",
+            "highlightTiming": {
+              "delayMs": 80,
+              "durationMs": 280,
+              "easing": "ease-in-out"
+            }
+          }
+        ],
+        "raw": "Summary: Walk through the three-layer model. Highlight the deck immutability insight.\nCue: Emphasize that the deck never changes during a talk.\nStep 2 Cue: [core-arch] Pause on the deck immutability point.\nStep 3 Highlight: [core-arch]\nStep 3 Highlight Timing: 80, 280, ease-in-out"
+      },
+      "steps": [
+        {
+          "id": "slide-2-step-1",
+          "blocks": [
+            {
+              "id": "core-arch",
+              "kind": "heading",
+              "text": "Core Architecture"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-2-step-2",
+          "blocks": [
+            {
+              "id": "block-2-2",
+              "kind": "text",
+              "text": "The runtime operates on a three-layer model:"
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-2-step-3",
+          "blocks": [
+            {
+              "id": "block-2-3",
+              "kind": "bullets",
+              "items": [
+                "Deck Layer: the static data model — slides, steps, blocks"
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "kind": "highlight",
+              "targetId": "core-arch",
+              "timing": {
+                "delayMs": 80,
+                "durationMs": 280,
+                "easing": "ease-in-out"
+              }
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-2-step-4",
+          "blocks": [
+            {
+              "id": "block-2-4",
+              "kind": "bullets",
+              "items": [
+                "State Layer: a mutable snapshot — current slide, step, timer, blackout"
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-2-step-5",
+          "blocks": [
+            {
+              "id": "block-2-5",
+              "kind": "bullets",
+              "items": [
+                "View Layer: audience card + speaker card, synced via BroadcastChannel"
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-2-step-6",
+          "blocks": [
+            {
+              "id": "block-2-6",
+              "kind": "callout",
+              "text": "**Key insight**: The deck is immutable JSON. All mutability lives in the state layer."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-3",
+      "title": "Step Flow & Action Overlays",
+      "notes": {
+        "summary": "Table overview of the four action types. Emphasis on the dual-mode support.",
+        "stepGuidance": [
+          {
+            "step": 2,
+            "cue": "Read through the action table.",
+            "targetBlockId": "action-overlays"
+          },
+          {
+            "step": 3,
+            "spotlightTargetId": "action-overlays",
+            "spotlightTiming": {
+              "delayMs": 120,
+              "durationMs": 420,
+              "easing": "ease-out"
+            },
+            "spotlightExitTiming": {
+              "delayMs": 20,
+              "durationMs": 180,
+              "easing": "ease-in"
+            }
+          }
+        ],
+        "raw": "Summary: Table overview of the four action types. Emphasis on the dual-mode support.\nStep 2 Cue: [action-overlays] Read through the action table.\nStep 3 Spotlight: [action-overlays]\nStep 3 Spotlight Timing: 120, 420, ease-out\nStep 3 Spotlight Exit Timing: 20, 180, ease-in"
+      },
+      "steps": [
+        {
+          "id": "slide-3-step-1",
+          "blocks": [
+            {
+              "id": "action-overlays",
+              "kind": "heading",
+              "text": "Step Flow & Action Overlays"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-3-step-2",
+          "blocks": [
+            {
+              "id": "block-3-2",
+              "kind": "text",
+              "text": "Each slide contains one or more steps. Each step can carry **actions**:"
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-3-step-3",
+          "blocks": [
+            {
+              "id": "block-3-3",
+              "kind": "table",
+              "headers": [
+                "Action",
+                "Target",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "Highlight",
+                  "A visible block",
+                  "Focus ring + emphasis glow"
+                ],
+                [
+                  "Appear",
+                  "A visible block",
+                  "Entry animation"
+                ],
+                [
+                  "Spotlight",
+                  "A block or coordinate",
+                  "Focus mask + radial glow"
+                ],
+                [
+                  "Laser",
+                  "A point chain",
+                  "Animated draw path"
+                ]
+              ]
+            }
+          ],
+          "actions": [
+            {
+              "kind": "spotlight",
+              "targetId": "action-overlays",
+              "timing": {
+                "delayMs": 120,
+                "durationMs": 420,
+                "easing": "ease-out"
+              },
+              "exitTiming": {
+                "delayMs": 20,
+                "durationMs": 180,
+                "easing": "ease-in"
+              }
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-3-step-4",
+          "blocks": [
+            {
+              "id": "block-3-4",
+              "kind": "two-column",
+              "left": "Authoring Mode\nPrefer editability, structure clarity, and office handoff.\nSpeaker guidance only when it improves revision.",
+              "right": "Presenting Mode\nPrefer live flow, step progression, and speaker pacing.\nExplicit anchors, step guidance, action-rich blocks."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-4",
+      "title": "Highlight Action Demo",
+      "notes": {
+        "summary": "Demonstrate the highlight action — a block gets a focus ring.",
+        "cues": [
+          "Call attention to the subtle glow around the highlighted block."
+        ],
+        "stepGuidance": [
+          {
+            "step": 2,
+            "highlightTargetId": "highlight-demo",
+            "highlightTiming": {
+              "delayMs": 100,
+              "durationMs": 300,
+              "easing": "ease-out"
+            },
+            "highlightExitTiming": {
+              "delayMs": 30,
+              "durationMs": 200,
+              "easing": "ease-in"
+            }
+          }
+        ],
+        "raw": "Summary: Demonstrate the highlight action — a block gets a focus ring.\nCue: Call attention to the subtle glow around the highlighted block.\nStep 2 Highlight: [highlight-demo]\nStep 2 Highlight Timing: 100, 300, ease-out\nStep 2 Highlight Exit Timing: 30, 200, ease-in"
+      },
+      "steps": [
+        {
+          "id": "slide-4-step-1",
+          "blocks": [
+            {
+              "id": "highlight-demo",
+              "kind": "heading",
+              "text": "Highlight Action Demo"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-4-step-2",
+          "blocks": [
+            {
+              "id": "block-4-2",
+              "kind": "text",
+              "text": "This slide demonstrates the **highlight** action."
+            }
+          ],
+          "actions": [
+            {
+              "kind": "highlight",
+              "targetId": "highlight-demo",
+              "timing": {
+                "delayMs": 100,
+                "durationMs": 300,
+                "easing": "ease-out"
+              },
+              "exitTiming": {
+                "delayMs": 30,
+                "durationMs": 200,
+                "easing": "ease-in"
+              }
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-4-step-3",
+          "blocks": [
+            {
+              "id": "block-4-3",
+              "kind": "text",
+              "text": "When you reach Step 2, the block below will be highlighted with the accent color."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-4-step-4",
+          "blocks": [
+            {
+              "id": "block-4-4",
+              "kind": "text",
+              "text": "A highlighted block gets a subtle focus ring and a tinted background. It draws the audience's attention without removing context from the rest of the slide."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-5",
+      "title": "Spotlight Action Demo",
+      "notes": {
+        "summary": "Spotlight focuses attention on one area while dimming the rest.",
+        "cues": [
+          "Step forward to see the spotlight effect."
+        ],
+        "stepGuidance": [
+          {
+            "step": 2,
+            "spotlightTargetId": "spotlight-demo",
+            "spotlightTiming": {
+              "delayMs": 140,
+              "durationMs": 500,
+              "easing": "ease-out"
+            },
+            "spotlightExitTiming": {
+              "delayMs": 20,
+              "durationMs": 200,
+              "easing": "ease-in"
+            }
+          }
+        ],
+        "raw": "Summary: Spotlight focuses attention on one area while dimming the rest.\nCue: [spotlight-demo] Step forward to see the spotlight effect.\nStep 2 Spotlight: [spotlight-demo]\nStep 2 Spotlight Timing: 140, 500, ease-out\nStep 2 Spotlight Exit Timing: 20, 200, ease-in"
+      },
+      "steps": [
+        {
+          "id": "slide-5-step-1",
+          "blocks": [
+            {
+              "id": "spotlight-demo",
+              "kind": "heading",
+              "text": "Spotlight Action Demo"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-5-step-2",
+          "blocks": [
+            {
+              "id": "block-5-2",
+              "kind": "text",
+              "text": "This slide demonstrates the **spotlight** action."
+            }
+          ],
+          "actions": [
+            {
+              "kind": "spotlight",
+              "targetId": "spotlight-demo",
+              "timing": {
+                "delayMs": 140,
+                "durationMs": 500,
+                "easing": "ease-out"
+              },
+              "exitTiming": {
+                "delayMs": 20,
+                "durationMs": 200,
+                "easing": "ease-in"
+              }
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-5-step-3",
+          "blocks": [
+            {
+              "id": "block-5-3",
+              "kind": "text",
+              "text": "When you reach Step 2, a spotlight will focus on the content area below, dimming everything else."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-5-step-4",
+          "blocks": [
+            {
+              "id": "block-5-4",
+              "kind": "text",
+              "text": "A spotlight creates a focus zone — the area outside the target dims, helping the audience concentrate on one thing at a time."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-5-step-5",
+          "blocks": [
+            {
+              "id": "block-5-5",
+              "kind": "callout",
+              "text": "Spotlight is ideal for focusing attention on a specific diagram, metric, or code block during a walkthrough."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-6",
+      "title": "Laser Pointer + Highlight Demo",
+      "notes": {
+        "summary": "Laser dot paired with highlight — point at what you're explaining.",
+        "cues": [
+          "The laser dot appears beside the highlighted block automatically."
+        ],
+        "stepGuidance": [
+          {
+            "step": 2,
+            "highlightTargetId": "laser-demo",
+            "laserPoints": [
+              {
+                "x": 0.48,
+                "y": 0.5
+              },
+              {
+                "x": 0.52,
+                "y": 0.5
+              }
+            ],
+            "laserTiming": {
+              "delayMs": 220,
+              "durationMs": 400,
+              "easing": "ease-out"
+            },
+            "laserExitTiming": {
+              "delayMs": 10,
+              "durationMs": 200,
+              "easing": "ease-in"
+            }
+          }
+        ],
+        "raw": "Summary: Laser dot paired with highlight — point at what you're explaining.\nCue: The laser dot appears beside the highlighted block automatically.\nStep 2 Highlight: [laser-demo]\nStep 2 Laser: 0.48,0.50 -> 0.52,0.50\nStep 2 Laser Timing: 220, 400, ease-out\nStep 2 Laser Exit Timing: 10, 200, ease-in"
+      },
+      "steps": [
+        {
+          "id": "slide-6-step-1",
+          "blocks": [
+            {
+              "id": "laser-demo",
+              "kind": "heading",
+              "text": "Laser Pointer + Highlight Demo"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-6-step-2",
+          "blocks": [
+            {
+              "id": "block-6-2",
+              "kind": "text",
+              "text": "This slide demonstrates the **laser pointer** working together with **highlight**."
+            }
+          ],
+          "actions": [
+            {
+              "kind": "highlight",
+              "targetId": "laser-demo"
+            },
+            {
+              "kind": "laser",
+              "points": [
+                {
+                  "x": 0.48,
+                  "y": 0.5
+                },
+                {
+                  "x": 0.52,
+                  "y": 0.5
+                }
+              ],
+              "timing": {
+                "delayMs": 220,
+                "durationMs": 400,
+                "easing": "ease-out"
+              },
+              "exitTiming": {
+                "delayMs": 10,
+                "durationMs": 200,
+                "easing": "ease-in"
+              }
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-3",
+          "blocks": [
+            {
+              "id": "block-6-3",
+              "kind": "text",
+              "text": "When you reach Step 2, the content block below will be highlighted with a focus ring, and a **red laser dot** will appear near it — just like a real presenter pointing at the board."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-4",
+          "blocks": [
+            {
+              "id": "block-6-4",
+              "kind": "text",
+              "text": "The laser dot pulses gently to draw the audience's eye to the exact spot you're explaining."
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-5",
+          "blocks": [
+            {
+              "id": "block-6-5",
+              "kind": "text",
+              "text": "Laser dots are ideal for:"
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-6",
+          "blocks": [
+            {
+              "id": "block-6-6",
+              "kind": "bullets",
+              "items": [
+                "Pointing at specific words or numbers"
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-7",
+          "blocks": [
+            {
+              "id": "block-6-7",
+              "kind": "bullets",
+              "items": [
+                "Indicating which part of a diagram to look at"
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-6-step-8",
+          "blocks": [
+            {
+              "id": "block-6-8",
+              "kind": "bullets",
+              "items": [
+                "Tracing along with your verbal explanation"
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-7",
+      "title": "Implementation Timeline",
+      "notes": {
+        "summary": "Four-phase implementation plan.",
+        "cues": [
+          "Read through the phases at a steady pace."
+        ],
+        "raw": "Summary: Four-phase implementation plan.\nCue: Read through the phases at a steady pace."
+      },
+      "steps": [
+        {
+          "id": "slide-7-step-1",
+          "blocks": [
+            {
+              "id": "timeline",
+              "kind": "heading",
+              "text": "Implementation Timeline"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-7-step-2",
+          "blocks": [
+            {
+              "id": "block-7-2",
+              "kind": "timeline",
+              "items": [
+                {
+                  "label": "Label",
+                  "detail": "Phase 1"
+                },
+                {
+                  "label": "Detail",
+                  "detail": "Core deck model + markdown ingest"
+                },
+                {
+                  "label": "Label",
+                  "detail": "Phase 2"
+                },
+                {
+                  "label": "Detail",
+                  "detail": "Dual-view runtime with state sync"
+                },
+                {
+                  "label": "Label",
+                  "detail": "Phase 3"
+                },
+                {
+                  "label": "Detail",
+                  "detail": "Action overlay system + motion profiles"
+                },
+                {
+                  "label": "Label",
+                  "detail": "Phase 4"
+                },
+                {
+                  "label": "Detail",
+                  "detail": "PPTX export + asset pipeline"
+                }
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-8",
+      "title": "Runtime Controls",
+      "notes": {
+        "summary": "List of keyboard shortcuts for the runtime.",
+        "raw": "Summary: List of keyboard shortcuts for the runtime."
+      },
+      "steps": [
+        {
+          "id": "slide-8-step-1",
+          "blocks": [
+            {
+              "id": "block-8-1",
+              "kind": "heading",
+              "text": "Runtime Controls"
+            }
+          ],
+          "transition": {
+            "kind": "none"
+          }
+        },
+        {
+          "id": "slide-8-step-2",
+          "blocks": [
+            {
+              "id": "block-8-2",
+              "kind": "table",
+              "headers": [
+                "Shortcut",
+                "Action"
+              ],
+              "rows": [
+                [
+                  "ArrowRight / Space",
+                  "Next step"
+                ],
+                [
+                  "ArrowLeft",
+                  "Previous step"
+                ],
+                [
+                  "F",
+                  "Fullscreen"
+                ],
+                [
+                  "S",
+                  "Open speaker view"
+                ],
+                [
+                  "B",
+                  "Toggle blackout"
+                ],
+                [
+                  "T",
+                  "Pause / resume timer"
+                ],
+                [
+                  "Escape",
+                  "Exit fullscreen or blackout"
+                ]
+              ]
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        },
+        {
+          "id": "slide-8-step-3",
+          "blocks": [
+            {
+              "id": "block-8-3",
+              "kind": "text",
+              "text": "{.shortcuts-table}"
+            }
+          ],
+          "transition": {
+            "kind": "fade"
+          }
+        }
+      ]
+    }
+  ]
+}
